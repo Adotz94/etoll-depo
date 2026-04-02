@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>e-Toll Struk Generator | Jasa Marga Style - Edit Gerbang & Nominal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #e2e8f0 0%, #cbd5e1 100%);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Container utama */
+        .app-container {
+            max-width: 1300px;
+            width: 100%;
+            background: #f1f5f9;
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        /* Panel kiri - Editor */
+        .editor-panel {
+            flex: 1.2;
+            background: white;
+            padding: 2rem;
+            border-right: 1px solid #e2edf2;
+        }
+
+        /* Panel kanan - Preview Struk */
+        .preview-panel {
+            flex: 1;
+            background: #fefcf5;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Header */
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.8rem;
+            border-bottom: 2px solid #ff9900;
+            padding-bottom: 0.8rem;
+        }
+        .header-title i {
+            font-size: 2rem;
+            color: #003366;
+        }
+        .header-title h2 {
+            font-size: 1.5rem;
+            color: #0a2b44;
+        }
+
+        .form-group {
+            margin-bottom: 1.3rem;
+        }
+        label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #1e3a5f;
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+        label i {
+            width: 1.6rem;
+            color: #ff9900;
+        }
+        input, select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1.5px solid #e2edf2;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            transition: 0.2s;
+            background: white;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #ff9900;
+            box-shadow: 0 0 0 3px rgba(255,153,0,0.2);
+        }
+        .row-duo {
+            display: flex;
+            gap: 1rem;
+        }
+        .row-duo .form-group {
+            flex: 1;
+        }
+
+        /* tombol aksi */
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            border: none;
+            padding: 0.8rem 1.4rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: #ff9900;
+            color: #1e2f3e;
+        }
+        .btn-primary:hover {
+            background: #e68a00;
+            transform: scale(0.97);
+            color: white;
+        }
+        .btn-secondary {
+            background: #eef3f8;
+            border: 1px solid #cbdde6;
+        }
+        .btn-secondary:hover {
+            background: #e2ecf3;
+        }
+        .btn-print {
+            background: #003366;
+            color: white;
+        }
+        .btn-print:hover {
+            background: #002244;
+        }
+
+        /* Style Struk e-Toll seperti gambar */
+        .struk-card {
+            background: white;
+            width: 100%;
+            max-width: 380px;
+            border-radius: 1.2rem;
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            font-family: 'Courier New', 'SF Mono', monospace;
+            transition: all 0.2s;
+            border: 1px solid #e0d6b5;
+        }
+        .struk-header {
+            background: #003366;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+        .struk-header h3 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .struk-header p {
+            font-size: 0.65rem;
+            opacity: 0.9;
+        }
+        .struk-body {
+            padding: 1.2rem 1.2rem 1rem 1.2rem;
+            background: #fffef7;
+        }
+        .struk-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.6rem;
+            font-size: 0.75rem;
+            border-bottom: 1px dashed #e2e0d0;
+            padding-bottom: 0.4rem;
+        }
+        .struk-row .label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .struk-row .value {
+            font-weight: 700;
+            color: #1f2f3e;
+            text-align: right;
+        }
+        .divider-dash {
+            border-top: 1px dashed #c0b280;
+            margin: 0.7rem 0;
+        }
+        .total-row {
+            font-size: 0.9rem;
+            font-weight: 800;
+            background: #fef3c7;
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+        }
+        .footer-struk {
+            text-align: center;
+            font-size: 0.6rem;
+            color: #6b7280;
+            padding: 0.8rem;
+            border-top: 1px solid #eee5d5;
+            background: #faf9f0;
+        }
+        .badge-editable {
+            font-size: 0.7rem;
+            background: #eef2ff;
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            margin-bottom: 1rem;
+        }
+        .info-print {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #4b5563;
+        }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .print-area, .print-area * {
+                visibility: visible;
+            }
+            .print-area {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                margin: 0;
+                padding: 1rem;
+                background: white;
+            }
+            .no-print {
+                display: none;
+            }
+            .struk-card {
+                box-shadow: none;
+                margin: 0 auto;
+            }
+        }
+        .saldo-chip-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.3rem;
+        }
+        .saldo-chip {
+            background: #f1f5f9;
+            padding: 0.4rem 0.9rem;
+            border-radius: 2rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .saldo-chip.active {
+            background: #ff9900;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <!-- Panel Kiri: Edit Data Transaksi -->
+    <div class="editor-panel no-print">
+        <div class="header-title">
+            <i class="fas fa-edit"></i>
+            <h2>Edit Struk e-Toll</h2>
+        </div>
+        <div class="badge-editable"><i class="fas fa-pen-ruler"></i> Ubah data di bawah, struk akan otomatis berubah</div>
+
+        <div class="form-group">
+            <label><i class="fas fa-road"></i> Gerbang Masuk (Tap Masuk)</label>
+            <input type="text" id="gerbangMasuk" placeholder="Contoh: GT Cikampek Utama" value="GT Cikampek Utama">
+        </div>
+        <div class="form-group">
+            <label><i class="fas fa-road"></i> Gerbang Keluar (Tap Keluar)</label>
+            <input type="text" id="gerbangKeluar" placeholder="Contoh: GT Halim" value="GT Halim">
+        </div>
+        <div class="row-duo">
+            <div class="form-group">
+                <label><i class="fas fa-calendar-alt"></i> Tanggal Transaksi</label>
+                <input type="date" id="tanggalTransaksi" value="2025-02-18">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-clock"></i> Waktu</label>
+                <input type="time" id="waktuTransaksi" value="14:30">
+            </div>
+        </div>
+        <div class="form-group">
+            <label><i class="fas fa-ticket-alt"></i> Nominal Tarif (Rp)</label>
+            <div class="saldo-chip-group" id="nominalChipGroup">
+                <span data-nominal="6500" class="saldo-chip">Rp 6500</span>
+                <span data-nominal="12500" class="saldo-chip">Rp 12.500</span>
+                <span data-nominal="10500" class="saldo-chip active">Rp 10.500</span>
+                <span data-nominal="14000" class="saldo-chip">Rp 14.000</span>
+                <span data-nominal="20000" class="saldo-chip">Rp 20.000</span>
+                <span data-nominal="25500" class="saldo-chip">Rp 25.500</span>
+            </div>
+            <input type="number" id="customNominal" placeholder="Atau masukkan nominal lain (Rp)" step="500" style="margin-top: 10px;">
+        </div>
+
+        <div class="row-duo">
+            <div class="form-group">
+                <label><i class="fas fa-credit-card"></i> No. Kartu e-Toll</label>
+                <input type="text" id="noKartu" value="1234 5678 9012 3456" maxlength="25">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Nama Pemilik</label>
+                <input type="text" id="namaPemilik" value="BUDI SANTOSO">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label><i class="fas fa-wallet"></i> Saldo Akhir (Setelah Transaksi)</label>
+            <input type="number" id="saldoAkhir" placeholder="Saldo setelah tap keluar" value="87500">
+        </div>
+
+        <div class="btn-group">
+            <button id="btnUpdateStruk" class="btn btn-primary"><i class="fas fa-sync-alt"></i> Perbarui Struk</button>
+            <button id="btnPrintStruk" class="btn btn-print"><i class="fas fa-print"></i> Cetak / Print Struk</button>
+            <button id="btnResetDefault" class="btn btn-secondary"><i class="fas fa-undo-alt"></i> Reset Default</button>
+        </div>
+        <div class="info-print">
+            <i class="fas fa-info-circle"></i> Klik cetak untuk print struk seperti struk asli e-Toll
+        </div>
+    </div>
+
+    <!-- Panel Kanan: Preview Struk Digital mirip gambar -->
+    <div class="preview-panel">
+        <div class="struk-card print-area" id="strukPreviewCard">
+            <div class="struk-header">
+                <h3><i class="fas fa-road"></i> JASA MARGA TOLL</h3>
+                <p>e-Toll Transaction Receipt</p>
+            </div>
+            <div class="struk-body">
+                <div class="struk-row">
+                    <span class="label">Gerbang Masuk</span>
+                    <span class="value" id="previewMasuk">GT Cikampek Utama</span>
+                </div>
+                <div class="struk-row">
+                    <span class="label">Gerbang Keluar</span>
+                    <span class="value" id="previewKeluar">GT Halim</span>
+                </div>
+                <div class="struk-row">
+                    <span class="label">Tanggal / Waktu</span>
+                    <span class="value" id="previewDateTime">18/02/2025 14:30</span>
+                </div>
+                <div class="divider-dash"></div>
+                <div class="struk-row">
+                    <span class="label">No. Kartu</span>
+                    <span class="value" id="previewNoKartu">1234 5678 9012 3456</span>
+                </div>
+                <div class="struk-row">
+                    <span class="label">Pemilik</span>
+                    <span class="value" id="previewNama">BUDI SANTOSO</span>
+                </div>
+                <div class="divider-dash"></div>
+                <div class="struk-row total-row">
+                    <span class="label"><i class="fas fa-money-bill-wave"></i> Tarif Tol</span>
+                    <span class="value" id="previewNominal">Rp 22.500</span>
+                </div>
+                <div class="struk-row">
+                    <span class="label">Saldo Akhir</span>
+                    <span class="value" id="previewSaldo">Rp 87.500</span>
+                </div>
+                <div class="divider-dash"></div>
+                <div class="struk-row">
+                    <span class="label">Status</span>
+                    <span class="value" style="color: #10b981;">BERHASIL</span>
+                </div>
+                <div class="struk-row">
+                    <span class="label">ID Transaksi</span>
+                    <span class="value" id="previewTrxId">TOL-20250218-001</span>
+                </div>
+            </div>
+            <div class="footer-struk">
+                <i class="fas fa-check-circle"></i> Terima kasih, selamat jalan<br>
+                Simpan struk sebagai bukti transaksi
+            </div>
+        </div>
+        <div class="info-print no-print" style="margin-top: 20px;">
+            <i class="fas fa-print"></i> Gunakan tombol cetak untuk print struk fisik / PDF
+        </div>
+    </div>
+</div>
+
+<script>
+    // DOM elements
+    const gerbangMasukInput = document.getElementById('gerbangMasuk');
+    const gerbangKeluarInput = document.getElementById('gerbangKeluar');
+    const tanggalInput = document.getElementById('tanggalTransaksi');
+    const waktuInput = document.getElementById('waktuTransaksi');
+    const customNominalInput = document.getElementById('customNominal');
+    const noKartuInput = document.getElementById('noKartu');
+    const namaPemilikInput = document.getElementById('namaPemilik');
+    const saldoAkhirInput = document.getElementById('saldoAkhir');
+
+    // preview elements
+    const previewMasuk = document.getElementById('previewMasuk');
+    const previewKeluar = document.getElementById('previewKeluar');
+    const previewDateTime = document.getElementById('previewDateTime');
+    const previewNominal = document.getElementById('previewNominal');
+    const previewNoKartu = document.getElementById('previewNoKartu');
+    const previewNama = document.getElementById('previewNama');
+    const previewSaldo = document.getElementById('previewSaldo');
+    const previewTrxId = document.getElementById('previewTrxId');
+
+    // nominal chip
+    const nominalChips = document.querySelectorAll('#nominalChipGroup .saldo-chip');
+    let selectedNominal = 22500; // default 22.500
+
+    // Fungsi format rupiah
+    function formatRupiah(angka) {
+        if (isNaN(angka) || angka === "") return "Rp 0";
+        let number = parseInt(angka);
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
+    }
+
+    // Generate ID transaksi unik (berdasarkan tanggal dan random)
+    function generateTransactionId() {
+        let tgl = tanggalInput.value.replace(/-/g, '');
+        if (!tgl) tgl = "250218";
+        let random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+        return `TOL-${tgl}-${random}`;
+    }
+
+    // Fungsi utama: render ulang seluruh struk berdasarkan data input
+    function renderStruk() {
+        // Ambil nilai dari form
+        let masuk = gerbangMasukInput.value.trim() || "GT Tidak Terdaftar";
+        let keluar = gerbangKeluarInput.value.trim() || "GT Tidak Terdaftar";
+        let tgl = tanggalInput.value;
+        let waktu = waktuInput.value;
+        let tanggalFormatted = "";
+        if (tgl) {
+            let parts = tgl.split('-');
+            tanggalFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
+        } else {
+            tanggalFormatted = "18/02/2025";
+        }
+        let dateTimeStr = `${tanggalFormatted} ${waktu || "14:30"}`;
+
+        // Nominal: prioritaskan custom jika diisi, else pakai selectedNominal
+        let nominal = selectedNominal;
+        let customVal = customNominalInput.value.trim();
+        if (customVal !== "" && !isNaN(parseFloat(customVal)) && parseFloat(customVal) > 0) {
+            nominal = Math.floor(parseFloat(customVal));
+            // highlight chip nonaktif
+            nominalChips.forEach(chip => chip.classList.remove('active'));
+        } else {
+            // pastikan chip active sinkron dengan selectedNominal
+            nominalChips.forEach(chip => {
+                let chipVal = parseInt(chip.getAttribute('data-nominal'));
+                if (chipVal === selectedNominal) chip.classList.add('active');
+                else chip.classList.remove('active');
+            });
+        }
+
+        let noKartu = noKartuInput.value.trim() || "**** **** **** 0000";
+        let nama = namaPemilikInput.value.trim().toUpperCase() || "PEMILIK KARTU";
+        let saldoAkhirVal = saldoAkhirInput.value.trim();
+        let saldoAkhir = (saldoAkhirVal !== "" && !isNaN(parseFloat(saldoAkhirVal))) ? parseInt(saldoAkhirVal) : 87500;
+
+        // Update preview DOM
+        previewMasuk.innerText = masuk;
+        previewKeluar.innerText = keluar;
+        previewDateTime.innerText = dateTimeStr;
+        previewNominal.innerText = formatRupiah(nominal);
+        previewNoKartu.innerText = noKartu;
+        previewNama.innerText = nama;
+        previewSaldo.innerText = formatRupiah(saldoAkhir);
+        
+        // Generate ID transaksi berdasarkan tanggal dan random (setiap render bisa beda, tapi kita generate ulang)
+        let trxId = generateTransactionId();
+        previewTrxId.innerText = trxId;
+    }
+
+    // Sinkronisasi chip nominal
+    function syncNominalFromChip(value) {
+        selectedNominal = value;
+        customNominalInput.value = ""; // kosongkan custom
+        // update active class
+        nominalChips.forEach(chip => {
+            let chipVal = parseInt(chip.getAttribute('data-nominal'));
+            if (chipVal === value) chip.classList.add('active');
+            else chip.classList.remove('active');
+        });
+        renderStruk();
+    }
+
+    // Event untuk chip nominal
+    nominalChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            let val = parseInt(chip.getAttribute('data-nominal'));
+            if (!isNaN(val)) {
+                syncNominalFromChip(val);
+            }
+        });
+    });
+
+    // Event untuk custom nominal input
+    customNominalInput.addEventListener('input', function(e) {
+        let val = e.target.value.trim();
+        if (val !== "") {
+            let num = parseInt(val);
+            if (!isNaN(num) && num > 0) {
+                selectedNominal = num;
+                // nonaktifkan semua chip active
+                nominalChips.forEach(chip => chip.classList.remove('active'));
+                renderStruk();
+            } else if (val === "") {
+                // jika dikosongkan, kembali ke chip terakhir yang aktif
+                let activeChip = document.querySelector('#nominalChipGroup .saldo-chip.active');
+                if (activeChip) {
+                    selectedNominal = parseInt(activeChip.getAttribute('data-nominal'));
+                } else {
+                    // fallback
+                    selectedNominal = 22500;
+                }
+                renderStruk();
+            } else {
+                // tidak valid
+                renderStruk();
+            }
+        } else {
+            // jika kosongkan custom, pakai chip active
+            let activeChip = document.querySelector('#nominalChipGroup .saldo-chip.active');
+            if (activeChip) {
+                selectedNominal = parseInt(activeChip.getAttribute('data-nominal'));
+            } else {
+                selectedNominal = 22500;
+            }
+            renderStruk();
+        }
+    });
+
+    // Event listener untuk semua input agar realtime update struk
+    function bindRealtime() {
+        const inputs = [gerbangMasukInput, gerbangKeluarInput, tanggalInput, waktuInput, noKartuInput, namaPemilikInput, saldoAkhirInput];
+        inputs.forEach(inp => {
+            inp.addEventListener('input', () => renderStruk());
+            inp.addEventListener('change', () => renderStruk());
+        });
+        // khusus tanggal & waktu
+        tanggalInput.addEventListener('change', () => renderStruk());
+        waktuInput.addEventListener('change', () => renderStruk());
+    }
+
+    // Reset ke data default seperti contoh gambar (dengan nominal 22.500, gerbang masuk/keluar sesuai)
+    function resetToDefault() {
+        gerbangMasukInput.value = "GT Cikampek Utama";
+        gerbangKeluarInput.value = "GT Halim";
+        tanggalInput.value = "2025-02-18";
+        waktuInput.value = "14:30";
+        noKartuInput.value = "1234 5678 9012 3456";
+        namaPemilikInput.value = "BUDI SANTOSO";
+        saldoAkhirInput.value = "87500";
+        // reset nominal chip ke 22.500
+        syncNominalFromChip(22500);
+        customNominalInput.value = "";
+        renderStruk();
+    }
+
+    // Cetak struk (hanya area struk)
+    function printStruk() {
+        const strukElement = document.getElementById('strukPreviewCard');
+        if (!strukElement) return;
+        // Clone elemen struk untuk dicetak
+        const printContent = strukElement.cloneNode(true);
+        // style tambahan agar cetak rapi
+        const printWindow = window.open('', '_blank', 'width=500,height=700');
+        printWindow.document.write(`
+            <html>
+            <head>
+                <title>Cetak Struk e-Toll Jasa Marga</title>
+                <style>
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                    }
+                    body {
+                        font-family: 'Courier New', monospace;
+                        background: #e2e8f0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                        padding: 20px;
+                    }
+                    .struk-card {
+                        max-width: 380px;
+                        width: 100%;
+                        background: white;
+                        border-radius: 1.2rem;
+                        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+                        overflow: hidden;
+                        font-family: 'Courier New', 'SF Mono', monospace;
+                        margin: 0 auto;
+                    }
+                    .struk-header {
+                        background: #003366;
+                        color: white;
+                        text-align: center;
+                        padding: 1rem;
+                    }
+                    .struk-header h3 {
+                        font-family: 'Inter', sans-serif;
+                        font-weight: 700;
+                    }
+                    .struk-body {
+                        padding: 1.2rem;
+                        background: #fffef7;
+                    }
+                    .struk-row {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-bottom: 0.6rem;
+                        font-size: 0.75rem;
+                        border-bottom: 1px dashed #e2e0d0;
+                        padding-bottom: 0.4rem;
+                    }
+                    .label { font-weight: 600; color: #2c3e50; }
+                    .value { font-weight: 700; text-align: right; }
+                    .divider-dash {
+                        border-top: 1px dashed #c0b280;
+                        margin: 0.7rem 0;
+                    }
+                    .total-row {
+                        font-size: 0.9rem;
+                        font-weight: 800;
+                        background: #fef3c7;
+                        padding: 0.5rem;
+                        border-radius: 8px;
+                    }
+                    .footer-struk {
+                        text-align: center;
+                        font-size: 0.6rem;
+                        color: #6b7280;
+                        padding: 0.8rem;
+                        border-top: 1px solid #eee5d5;
+                        background: #faf9f0;
+                    }
+                    @media print {
+                        body {
+                            background: white;
+                            padding: 0;
+                        }
+                        .struk-card {
+                            box-shadow: none;
+                            margin: 0 auto;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                ${printContent.outerHTML}
+                <script>
+                    window.onload = function() {
+                        window.print();
+                        setTimeout(function() { window.close(); }, 800);
+                    };
+                <\/script>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+    }
+
+    // Tombol aksi
+    document.getElementById('btnUpdateStruk').addEventListener('click', () => {
+        renderStruk();
+        // feedback visual
+        const btn = document.getElementById('btnUpdateStruk');
+        btn.innerHTML = '<i class="fas fa-check"></i> Diperbarui!';
+        setTimeout(() => {
+            btn.innerHTML = '<i class="fas fa-sync-alt"></i> Perbarui Struk';
+        }, 1200);
+    });
+    document.getElementById('btnPrintStruk').addEventListener('click', printStruk);
+    document.getElementById('btnResetDefault').addEventListener('click', resetToDefault);
+
+    // inisialisasi
+    function init() {
+        bindRealtime();
+        // set default chip active sesuai 22500
+        syncNominalFromChip(22500);
+        renderStruk();
+    }
+
+    init();
+</script>
+</body>
+</html>
